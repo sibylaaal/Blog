@@ -48,9 +48,13 @@
                                                 <label for="manufacturer" class="text-sm font-medium text-stone-600">category</label>
 
                                                 <select name="category" id="manufacturer" class="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                                    <option>Cadberry</option>
-                                                    <option>Starbucks</option>
-                                                    <option>Hilti</option>
+
+                                                  @foreach($categories as $category)
+
+
+                                                    <option>{{$category->title}}</option>
+                                                    @endforeach
+
                                                 </select>
                                             </div>
 
@@ -63,9 +67,11 @@
                                                 <label for="status" class="text-sm font-medium text-stone-600">tag</label>
 
                                                 <select name="tag" id="status" class="mt-2 block w-full cursor-pointer rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                                    <option>Dispached Out</option>
-                                                    <option>In Warehouse</option>
-                                                    <option>Being Brought In</option>
+                                                    @foreach($tags as $tag)
+
+
+                                                        <option>{{$tag->title}}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -91,62 +97,50 @@
     </div>
     <ul class="grid grid-cols-1 xl:grid-cols-3 gap-y-10 gap-x-6 items-start p-8">
 
-
-
-
-
-
-
-        @if( count($posts)==0)
-
-<div class="flex justify-center "></div>
-            @include(".layouts/empty")
+        @if(count($posts) == 0)
+            <div class="flex justify-center">
+                @include(".layouts.empty")
+            </div>
         @endif
 
-
-
-
-
         @foreach($posts as $post)
-            <a href="{{route("post",["id"=>$post->id])}}">
-                <div class="md:p-8 p-2 bg-white">
-                    <!--Banner image-->
-                    <img
-                        class="rounded-lg w-full"
-                        src="https://images.unsplash.com/photo-1603349206295-dde20617cb6a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80
-          "
-                    />
-
-                    <!--Tag-->
-                    <p class="text-indigo-500 font-semibold text-base mt-2">{{$post->category->title}}</p>
-                    <!--Title-->
-                    <h1
-                        class="font-semibold text-gray-900 leading-none text-xl mt-1 capitalize truncate"
-                    >
-{{$post->title}}                    </h1>
-                    <!--Description-->
-                    <div class="max-w-full">
-                        <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-                      {{$post->description}}
-                        </p>
-                    </div>
-                    <div class="flex items-center space-x-2 mt-20">
-                        <!--Author's profile photo-->
+            <li>
+                <article class="relative overflow-hidden rounded-lg shadow transition hover:shadow-lg">
+                    <a href="{{ route("post", ["id" => $post->id]) }}" class="block">
                         <img
-                            class="w-10 h-10 object-cover object-center rounded-full"
-                            src="https://randomuser.me/api/portraits/men/54.jpg"
-                            alt="random user"
+                            alt=""
+                            src="https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
+                            class="absolute inset-0 h-full w-full object-cover"
                         />
-                        <div>
-                            <!--Author name-->
-                            <p class="text-gray-900 font-semibold">{{$post->user->name}}</p>
-                            <p class="text-gray-500 font-semibold text-sm">
-                                {{$post->created_at}}
+                    </a>
+
+                    <div class="relative bg-gradient-to-t from-gray-900/50 to-gray-900/25 pt-32 sm:pt-48 lg:pt-64">
+                        <div class="p-4 sm:p-6">
+                            <time datetime="2022-10-10" class="block text-xs text-white/90">
+                                {{ $post->created_at->format('M d') }}
+                            </time>
+                            <p class="text-white font-semibold text-base mt-2">{{ $post->category->title }}</p>
+
+                            <a href="#" class="text-white">
+                                <h3 class="mt-0.5 text-lg font-bold">{{ $post->title }}</h3>
+                            </a>
+
+                            <p class="mt-2 line-clamp-3 text-sm/relaxed text-white/95">
+                                {{ $post->text }}
                             </p>
+
+                            <div class="flex items-center mt-2">
+                                <img
+                                    class="w-8 h-8 object-cover object-center rounded-full mr-2"
+                                    src="https://randomuser.me/api/portraits/men/54.jpg"
+                                    alt="random user"
+                                />
+                                <p class="text-white font-semibold">{{ $post->user->name }}</p>
+                            </div>
                         </div>
                     </div>
-                </div></a>
-
+                </article>
+            </li>
         @endforeach
 
     </ul>

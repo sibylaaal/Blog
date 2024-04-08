@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\category;
 use App\Models\Post;
+use App\Models\tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
@@ -16,7 +18,9 @@ class PostsController extends Controller
 
         try {
             $Posts=Post::with("category","tag")->paginate(5);
-            return view("layouts.articles",["posts"=>$Posts]);
+            $categories=category::all();
+            $tags=tag::all();
+            return view("layouts.articles",["posts"=>$Posts,'categories'=>$categories,'tags'=>$tags]);
 
         }catch (Exception $e){
             return view("layouts.articles")->with("error",$e);
@@ -67,24 +71,35 @@ class PostsController extends Controller
     {
         //
     }
-    public function search(Request $request ){
-
+    public function search(Request $request)
+    {
         try {
-            $tag=$request->input("tag");
-            $category=$request->input("category");
-            $date=$request->input("date");
-            $query=$request->input("name");
-            $Posts=Post::where("title","like","%{$query}%")
-                ->whereDate(DB::raw('DATE(created_at)'), '=', $date)
+            $tag = $request->input("tag");
+            $category = $request->input("category");
+            $date = $request->input("date");
+            $query = $request->input("name");
 
-                ->with("category","tag")->paginate(5);
-            return view("layouts.articles",["posts"=>$Posts]);
+            $queryBuilder = Post::query();
 
+            if (!empty($query)) {
+                $queryBuilder->where("title", "like", "%{$query}%");
+            }
 
-        }
-        catch(Exception $e){
-            redirect()->route("layouts.articles")->with("error",$e);
+            if (!empty($date)) {
+                $queryBuilder->whereDate('created_at', '=', $date);
+            }
 
+            // Include tag and category relationships
+            $queryBuilder->with("category", "tag");
+
+            // Paginate the results
+            $posts = $queryBuilder->paginate(5);
+
+            $categories=category::all();
+            $tags=tag::all();
+            return view("layouts.articles",["posts"=>$posts,'categories'=>$categories,'tags'=>$tags]);        } catch (Exception $e) {
+            // Redirect with error message
+            return redirect()->route("layouts.articles")->withErrors([$e->getMessage()]);
         }
     }
 
