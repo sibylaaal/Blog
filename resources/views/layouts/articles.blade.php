@@ -98,21 +98,20 @@
     <ul class="grid grid-cols-1 xl:grid-cols-3 gap-y-10 gap-x-6 items-start p-8">
 
         @if(count($posts) == 0)
-            <div class="flex justify-center">
                 @include(".layouts.empty")
-            </div>
-        @endif
+@endif
 
         @foreach($posts as $post)
             <li>
+                <a href="{{ route("post", ["id" => $post->id]) }}" class="block">
+
                 <article class="relative overflow-hidden rounded-lg shadow transition hover:shadow-lg">
-                    <a href="{{ route("post", ["id" => $post->id]) }}" class="block">
                         <img
                             alt=""
-                            src="https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
+                            src="{{ asset("storage/blogs/{$post->image}") }}"
+
                             class="absolute inset-0 h-full w-full object-cover"
                         />
-                    </a>
 
                     <div class="relative bg-gradient-to-t from-gray-900/50 to-gray-900/25 pt-32 sm:pt-48 lg:pt-64">
                         <div class="p-4 sm:p-6">
@@ -137,9 +136,13 @@
                                 />
                                 <p class="text-white font-semibold">{{ $post->user->name }}</p>
                             </div>
+
+
                         </div>
                     </div>
                 </article>
+                </a>
+
             </li>
         @endforeach
 

@@ -54,7 +54,8 @@ class PostsController extends Controller
 
 
         try {
-            $Post=Post::where("id",$id)->with("category","tag")->get();
+            $Post=Post::where("id",$id)->with("category","tag",'comment.user','comment.Replies.user'
+            )->get();
             return view("layouts.article",["post"=>$Post]);
 
         }catch (Exception $e){
