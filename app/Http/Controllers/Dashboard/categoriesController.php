@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\category;
+use App\Models\tag;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 class categoriesController extends Controller
 {
@@ -12,7 +15,17 @@ class categoriesController extends Controller
      */
     public function index()
     {
-        //
+
+        try {
+
+
+            $categories=category::paginate(5);
+
+            return view("layouts.dashboard.main.category.index",["categories"=>$categories]);
+
+        }catch (Exception $e){
+            return view("layouts.articles")->with("error",$e);
+        }
     }
 
     /**

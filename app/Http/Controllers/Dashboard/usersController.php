@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\tag;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 class usersController extends Controller
 {
@@ -12,7 +15,18 @@ class usersController extends Controller
      */
     public function index()
     {
-        //
+
+
+        try {
+
+
+            $Users=User::paginate(5);
+
+            return view("layouts.dashboard.main.users.index",["users"=>$Users]);
+
+        }catch (Exception $e){
+            return view("layouts.articles")->with("error",$e);
+        }
     }
 
     /**

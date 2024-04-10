@@ -16,16 +16,33 @@ class blogscontroller extends Controller
      */
     public function index()
     {
-
         try {
-            $Posts=Post::paginate(5);
-            $categories=category::all();
-            $tags=tag::all();
-            return view("layouts.dashboard.main.blogs.index",["posts"=>$Posts,'categories'=>$categories,'tags'=>$tags]);
+            $Posts = null;
+            if (auth()->user()->role =="author") {
+                // Debug statement
+                return "You are an author!";
+                // Query posts authored by the user
+                $Posts = Post::where("user_id", auth()->user()->id)->with("User", "category", "tag")->paginate(5);
+            } else {
+                // Debug statement
+                return "You are not an author!";
+                // Query all posts
+                $Posts = Post::with("User", "category", "tag")->paginate(5);
+            }
 
-        }catch (Exception $e){
-            return view("layouts.articles")->with("error",$e);
+            // Fetch categories and tags
+            $categories = category::all();
+            $tags = tag::all();
+
+            // Return view with posts, categories, and tags
+            return view("layouts.dashboard.main.blogs.index", ["posts" => $Posts, 'categories' => $categories, 'tags' => $tags]);
+        } catch (Exception $e) {
+            // Return error view
+            return view("layouts.articles")->with("error", $e);
         }
+
+
+
 
     }
 

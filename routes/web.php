@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Dashboard\blogscontroller;
+use App\Http\Controllers\Dashboard\categoriesController;
+use App\Http\Controllers\Dashboard\commentsController;
+use App\Http\Controllers\Dashboard\tagsControler;
+use App\Http\Controllers\Dashboard\usersController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,17 +25,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-
-
     Route::prefix("dashboard")->group(function () {
-        Route::get("/", [AdminController::class, 'index'])->name("dashboard");
-        Route::get("/blogs", [blogscontroller::class, 'index'])->name("blogs");
-        Route::get("/comments", [AdminController::class, 'index'])->name("comments");
-        Route::get("/tags", [AdminController::class, 'index'])->name("tags");
-        Route::get("/users", [AdminController::class, 'index'])->name("users");
-        Route::get("/categories", [AdminController::class, 'index'])->name("categories");
+        Route::get("/", [AdminController::class, 'index'])->name("dashboard")->middleware("multiacces");
+        Route::get("/blogs", [BlogsController::class, 'index'])->name("blogs")->middleware("multiacces");
+        Route::get("/comments", [commentsController::class, 'index'])->name("comments")->middleware("multiacces");
+        Route::get("/tags", [tagsControler::class, 'index'])->name("tags")->middleware("isadmin");
+        Route::get("/users", [usersController::class, 'index'])->name("users")->middleware("isadmin");
+        Route::get("/categories", [categoriesController::class, 'index'])->name("categories")->middleware("isadmin");
+
 
     });
+
 
 
 

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\comment;
+use App\Models\tag;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 class tagsControler extends Controller
 {
@@ -12,7 +15,19 @@ class tagsControler extends Controller
      */
     public function index()
     {
-        //
+
+
+        try {
+
+
+                $tags=tag::paginate(5);
+
+            return view("layouts.dashboard.main.tags.index",["tags"=>$tags]);
+
+        }catch (Exception $e){
+            return view("layouts.articles")->with("error",$e);
+        }
+
     }
 
     /**

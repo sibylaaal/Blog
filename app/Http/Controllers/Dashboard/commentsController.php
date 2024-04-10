@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\category;
+use App\Models\comment;
+use App\Models\Post;
+use App\Models\tag;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 class commentsController extends Controller
 {
@@ -12,7 +17,22 @@ class commentsController extends Controller
      */
     public function index()
     {
-        //
+
+        try {
+
+            if (auth()->user()->role=="admin"){
+
+                $comments=comment::paginate(5);
+            }
+            else{
+                $comments=comment::where("user_id",auth()->user()->id)->paginate(5);
+            }
+
+            return view("layouts.dashboard.main.comment.index",["comments"=>$comments]);
+
+        }catch (Exception $e){
+            return view("layouts.articles")->with("error",$e);
+        }
     }
 
     /**

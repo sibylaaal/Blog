@@ -15,7 +15,10 @@ class AdminController extends Controller
 
         try {
 
-            return view("layouts.dashboard.dashboardlayout");
+
+
+
+            return view("layouts.dashboard.main.home.index");
         }catch (Exception $e){
             return view("layouts.articles")->with("error",$e);
 
